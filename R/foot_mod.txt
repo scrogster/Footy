@@ -1,0 +1,14 @@
+model{
+	for(i in 1:games){
+		homewin[i]~dbern(p[i])
+		logit(p[i])<- (d[hteam[i]]-d[ateam[i]]) + home_advantage
+	}
+	
+	#teams have normally distributed, fixed qualities
+	for(j in 1:teams) {d[j]~dnorm(0, 1)}
+	
+	#prior on home_advantage effect (additive effect of being at home)
+	home_advantage~dnorm(0.1, 0.01)
+	
+	
+}

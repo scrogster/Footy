@@ -1,0 +1,22 @@
+model{
+	for(i in 1:games){
+		homewin[i]~dbern(p[i])
+		logit(p[i])<- (d[hteam[i], time[i]]-d[ateam[i], time[i]]) + home_advantage
+	}
+	
+	#teams have normally distributed, fixed qualities
+	for(j in 1:teams) {
+	   d[j,1] ~ dnorm(0, 1)  #starting ability
+	    for(k in 2:times) {
+	   d[j, k]~dnorm(d[j,k-1], tau)  #ability follows random walk over time.
+	     }
+	   }
+	
+sigma~dunif(0, 1)
+tau<-1/pow(sigma, 2)
+	
+#prior on home_advantage effect (additive effect of being at home)
+home_advantage~dnorm(0.1, 0.01)
+	
+	
+}
