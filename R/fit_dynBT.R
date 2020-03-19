@@ -70,14 +70,17 @@ pres_quality<-team_list %>%
 pres_quality
 
 round_to_predict=1
+tips_out<-file.path("Tips", paste0("round_", round_to_predict, ".csv"))
 
-results %>%
+tips<-results %>%
 	mutate(prwin=mod$q50$p, lwr=mod$q2.5$p, upp=mod$q97.5$p) %>%
 	filter(year==2020) %>%
 	filter(round==round_to_predict) %>%
 	mutate(Predicted_winner=ifelse(prwin>0.5, hteam, ateam)) %>%
 	arrange(date) %>%
 	select(ateam, hteam, Predicted_winner, prwin, lwr, upp, round)
+
+readr::write_csv(tips, tips_out)
 
 #Calibration of margin###########################################################
 A<-results %>%
